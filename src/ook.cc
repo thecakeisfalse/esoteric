@@ -1,11 +1,6 @@
 #include "esoteric.hpp"
 #include <iostream>
 
-void ook(std::istream &input, std::ostream &output) {
-    std::string commands = get_input(input);
-    ook(commands, output);
-}
-
 void ook(std::string commands, std::ostream &output) {
     std::string only_special_commands = "";
     std::string brainfuck_commands = "";

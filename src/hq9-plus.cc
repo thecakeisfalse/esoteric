@@ -1,10 +1,5 @@
 #include "esoteric.hpp"
 
-void hq9_plus(std::istream &input, std::ostream &output) {
-    std::string commands = get_input(input);
-    hq9_plus(commands, output);
-}
-
 void hq9_plus(std::string commands, std::ostream &output) {
     int accumulator = 0;
 

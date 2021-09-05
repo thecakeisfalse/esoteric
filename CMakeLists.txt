@@ -4,10 +4,10 @@ cmake_minimum_required(VERSION 3.10)
 project(esoteric VERSION 0.0.1)
 
 # setup the C++ compiler
-set(CMAKE_CPP_COMPILER g++)
+set(CMAKE_CXX_COMPILER g++)
 
 # set C++ flags
-set(CMAKE_CXX_FLAGS "-O1 -Wall -Wextra")
+set(CMAKE_CXX_FLAGS "-O3 -Wall -Wextra")
 
 # get all C++ files
 file(GLOB_RECURSE SOURCES *.cc)

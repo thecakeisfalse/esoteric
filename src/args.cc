@@ -1,5 +1,6 @@
 #include "esoteric.hpp"
 #include <cstring>
+#include <cstdlib>
 
 void arg_help(int __attribute__((unused)) argc, char * argv[]) {
     std::cout << "Usage: " << argv[0] << " [options] file..." << std::endl;

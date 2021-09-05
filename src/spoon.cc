@@ -1,10 +1,5 @@
 #include "esoteric.hpp"
 
-void spoon(std::istream &input, std::ostream &output) {
-    std::string commands = get_input(input);
-    spoon(commands, output);
-}
-
 void spoon(std::string commands, std::ostream &output) {
     std::string brainfuck_commands = "";
 

@@ -2,25 +2,22 @@
 #include <fstream>
 #include <vector>
 
-void brainfuck(std::istream &input, std::ostream &output) {
-    std::string commands = get_input(input);
-    brainfuck(commands, output);
-}
+#define MAX_STACK_SIZE 256
 
 void brainfuck(std::string commands, std::ostream &output) {
     int commands_size = commands.length();
-    int * stack = new int[1024];
+    int * stack = new int[MAX_STACK_SIZE];
     int stack_pointer = 0;
     int instructions_size = 0;
-    struct Instruction * instructions = new struct Instruction[commands_size];
-    int index = 0;
-    char current_command;
+    register struct Instruction * instructions = new struct Instruction[commands_size];
+    register int index = 0;
+    register char current_command;
     char previous_command = 0;
     int count = 0;
     int opened_bracket = 0;
     int buffer[30000] = {0};
     int pointer = 0;
-    int i = 0;
+    register int i = 0;
 
     while (index < commands_size) {
         current_command = commands[index++];
@@ -45,6 +42,15 @@ void brainfuck(std::string commands, std::ostream &output) {
 
         if (current_command == '[') {
             instructions[instructions_size].opcode = current_command;
+            if (stack_pointer >= MAX_STACK_SIZE) {
+                // TODO - resize stack on overflow
+                std::cerr << "Error: too much opened brackets" << std::endl;
+
+                delete[] stack;
+                delete[] instructions;
+
+                exit(1);
+            }
             stack[stack_pointer++] = instructions_size;
             ++instructions_size;
         } else if (current_command == ']') {
@@ -62,26 +68,35 @@ void brainfuck(std::string commands, std::ostream &output) {
     }
 
     while (i < instructions_size) {
-        if (instructions[i].opcode == '[') {
-            if (buffer[pointer] == 0) {
-                i = instructions[i].operand;
-            }
-        } else if (instructions[i].opcode == ']') {
-            if (buffer[pointer] != 0) {
-                i = instructions[i].operand;
-            }
-        } else if (instructions[i].opcode == '.') {
-            output << (char)buffer[pointer];
-        } else if (instructions[i].opcode == ',') {
-            buffer[pointer] = std::cin.get();
-        } else if (instructions[i].opcode == '+') {
-            buffer[pointer] += instructions[i].operand;
-        } else if (instructions[i].opcode == '-') {
-            buffer[pointer] -= instructions[i].operand;
-        } else if (instructions[i].opcode == '>') {
-            pointer += instructions[i].operand;
-        } else if (instructions[i].opcode == '<') {
-            pointer -= instructions[i].operand;
+        switch (instructions[i].opcode) {
+            case '+':
+                buffer[pointer] += instructions[i].operand;
+                break;
+            case '-':
+                buffer[pointer] -= instructions[i].operand;
+                break;
+            case '<':
+                pointer -= instructions[i].operand;
+                break;
+            case '>':
+                pointer += instructions[i].operand;
+                break;
+            case '[':
+                if (buffer[pointer] == 0) {
+                    i = instructions[i].operand;
+                }
+                break;
+            case ']':
+                if (buffer[pointer] != 0) {
+                    i = instructions[i].operand;
+                }
+                break;
+            case '.':
+                output << (char)buffer[pointer];
+                break;
+            case ',':
+                buffer[pointer] = std::cin.get();
+                break;
         }
         ++i;
     }
